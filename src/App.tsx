@@ -1,24 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { AddItem } from './AddItem';
 
 function App() {
+  function getShoppingList() {
+    const list = window.localStorage.getItem('list')
+    return list ? JSON.parse(list) : ['test'];
+  }
+  
+  function addingItemHandler(data:string) {
+    setShoppingList([...shoppingList, data])
+    window.localStorage.setItem('list',JSON.stringify([...shoppingList, data]))
+  }
+  const [ shoppingList, setShoppingList ] = useState(getShoppingList())
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Shopping List</h1>
+        <ol>
+            {shoppingList.map((item:string,index:number) => {
+              return <li key={index}>{item}</li>
+            })}
+        </ol>
+        <hr />
+        <AddItem onAddingItem ={addingItemHandler}/>
     </div>
   );
 }
